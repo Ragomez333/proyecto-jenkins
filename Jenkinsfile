@@ -1,31 +1,34 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_HOST = "tcp://docker:2375"
+    }
+
     stages {
-        stage('Clonar código') {
+        stage('Checkout') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/Ragomez333/proyecto-jenkins.git'
+                git branch: 'master', url: 'https://github.com/Ragomez333/proyecto-jenkins.git'
             }
         }
 
-        stage('Construir contenedor web') {
+        stage('Build & Run Web') {
             steps {
-                // Apagar el servicio si ya estaba corriendo (ignora errores con "|| true")
-                sh 'docker -H tcp://docker:2375 compose down web_html || true'
+                // Detener contenedor anterior si existe
+                sh 'docker rm -f web_html || true'
 
-                // Levantar el servicio web con build forzado
-                sh 'docker -H tcp://docker:2375 compose up -d --build web_html'
+                // Construir imagen desde el repo
+                sh 'docker build -t web_html:latest .'
+
+                // Levantar contenedor en el puerto 8081
+                sh 'docker run -d --name web_html -p 8081:80 web_html:latest'
             }
         }
 
         stage('Verificar despliegue') {
             steps {
-                // Chequear si el contenedor web_html está arriba
-                sh 'docker -H tcp://docker:2375 ps | grep web_html || true'
-
-                // Validar que responda el servidor web
-                sh 'curl -I http://web_html:80 || true'
+                // Verificar respuesta HTTP del index
+                sh 'curl -I http://localhost:8081 || true'
             }
         }
     }
