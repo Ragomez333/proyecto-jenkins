@@ -1,6 +1,10 @@
+
+
 services:
   jenkins:
-    image: jenkins/jenkins:latest 
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: jenkins
     ports:
       - "8080:8080"
@@ -16,6 +20,7 @@ services:
       - "8081:80"
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html
+    profiles: ["manual"]   # 🔹 solo lo levanta Jenkins pipeline
 
 volumes:
   jenkins_home:
