@@ -1,24 +1,25 @@
+
 services:
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
     user: root
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8080:8080"   # UI de Jenkins
+      - "50000:50000" # Agentes
     environment:
-      - DOCKER_HOST=tcp://docker:2375
+      - DOCKER_HOST=tcp://docker:2375  # Jenkins usará el Docker remoto (DinD)
     volumes:
       - jenkins_home:/var/jenkins_home
     depends_on:
       - docker
 
-  docker:
+  docker: # Docker-in-Docker (DinD)
     image: docker:dind
     container_name: dind
     privileged: true
     environment:
-      - DOCKER_TLS_CERTDIR=   # desactiva TLS
+      - DOCKER_TLS_CERTDIR=   # Desactiva TLS para usarlo sin certificados
     ports:
       - "2375:2375"
     volumes:

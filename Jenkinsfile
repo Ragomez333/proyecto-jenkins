@@ -11,19 +11,22 @@ pipeline {
 
         stage('Construir contenedor web') {
             steps {
-                // Apagar el contenedor web si existe
-                sh 'docker compose down web_html || true'
+                // Apagar el servicio si ya estaba corriendo (ignora errores con "|| true")
+                sh 'docker -H tcp://docker:2375 compose down web_html || true'
 
-                // Levantar el servicio web_html
-                sh 'docker compose up -d --build web_html'
+                // Levantar el servicio web con build forzado
+                sh 'docker -H tcp://docker:2375 compose up -d --build web_html'
             }
         }
 
         stage('Verificar despliegue') {
             steps {
-                sh 'curl -I http://localhost:8081 || true'
+                // Chequear si el contenedor web_html está arriba
+                sh 'docker -H tcp://docker:2375 ps | grep web_html || true'
+
+                // Validar que responda el servidor web
+                sh 'curl -I http://web_html:80 || true'
             }
         }
     }
 }
-// Fin del Jenkinsfile
