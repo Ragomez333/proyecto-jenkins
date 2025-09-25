@@ -1,18 +1,21 @@
 # Proyecto Jenkins + Docker
 
-Este proyecto despliega un entorno con **Jenkins (última versión)** y un servidor **Nginx** que sirve una página estática (`index.html`).  
+Este proyecto despliega un entorno con **Jenkins (última versión)** y un servidor **Nginx** que sirve una página estática (`index.html`).
 La integración se maneja mediante **Docker Compose** y un **pipeline en Jenkins** definido en el archivo `Jenkinsfile`.
 
 ---
 
 ## 🚀 Requisitos previos
-- Docker Desktop instalado y en ejecución  
-- Git instalado  
-- Cuenta en GitHub  
+
+* [Docker Desktop](https://www.docker.com/products/docker-desktop) instalado y en ejecución
+* [Git](https://git-scm.com/downloads) instalado
+* Cuenta en [GitHub](https://github.com)
 
 ---
 
 ## 📂 Estructura del proyecto
+
+```
 proyecto-jenkins/
 │── index.html
 │── Dockerfile
@@ -21,75 +24,94 @@ proyecto-jenkins/
 │── Jenkinsfile
 │── README.md
 
-yaml
-Copiar código
+```
 
 ---
 
 ## ⚙️ Pasos para ejecutar el proyecto
 
 ### 1. Clonar el repositorio
+
 ```bash
 git clone https://github.com/Ragomez333/proyecto-jenkins.git
 cd proyecto-jenkins
-2. Levantar los contenedores con Docker Compose
-bash
-Copiar código
-docker-compose up -d --build
-Esto iniciará:
+```
 
-Jenkins en 👉 http://localhost:8080
+### 2. Levantar los contenedores con Docker Compose
 
-Nginx en 👉 http://localhost:8081
-
+```bash
+docker-compose up -d
+```
 Verifica los contenedores activos:
 
-bash
-Copiar código
+```bash
 docker ps
-🔑 Obtener la contraseña inicial de Jenkins
+```
+
+---
+
+## 🔑 Obtener la contraseña inicial de Jenkins
+
 Ejecuta:
 
-bash
-Copiar código
+```bash
 docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-O revisa los logs:
+```
+Con esa clave podrás iniciar sesión en `http://localhost:8080`.
 
-bash
-Copiar código
-docker logs jenkins | grep "Please use the following password"
-Con esa clave podrás iniciar sesión en 👉 http://localhost:8080.
+---
 
-📝 Configuración de Jenkins
-Abre http://localhost:8080.
+## 📝 Configuración de Jenkins
 
-Ingresa la contraseña inicial de admin.
+1. Abre [http://localhost:8080].
+2. Ingresa la contraseña inicial de admin.
+3. Instala los plugins recomendados.
+4. Crea un usuario administrador.
+5. Configura un nuevo **Pipeline** con tu repositorio de GitHub que contiene el `Jenkinsfile`.
 
-Instala los plugins recomendados.
+---
+## ⚡ Pipeline de Jenkins
 
-Crea un usuario administrador.
+El archivo `Jenkinsfile` realiza los siguientes pasos:
 
-Configura un nuevo Pipeline con tu repositorio de GitHub que contiene el Jenkinsfile.
-
-⚡ Pipeline de Jenkins
-El archivo Jenkinsfile realiza los siguientes pasos:
-
-Clona el repositorio desde GitHub.
-
-Construye la imagen web_html con el Dockerfile.
-
-Ejecuta un contenedor Nginx en el puerto 8081.
-
-Verifica que Nginx responde correctamente.
+* Clona el repositorio desde GitHub
+* Reconstruye los contenedores (`docker-compose up -d --build`)
+* Verifica que Nginx responde correctamente
 
 Ejemplo de verificación:
 
-bash
-Copiar código
+```bash
 curl -I http://localhost:8081
-🌐 Ver la página desplegada
-Abre en tu navegador:
-👉 http://localhost:8081 → muestra el index.html.
+```
 
-bash
-Copiar código
+---
+
+## 🌐 Ver la página desplegada
+
+Abre en tu navegador:
+
+* [http://localhost:8081](http://localhost:8081) → muestra el `index.html`
+
+---
+
+
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
