@@ -28,7 +28,7 @@ services:
       - docker-data:/var/lib/docker
 
   web_html:
-    image: Dockerfile
+    image: nginx:latest
     container_name: web_html
     volumes:
       - ./html:/usr/share/nginx/html:ro
