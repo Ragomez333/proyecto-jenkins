@@ -15,7 +15,7 @@ pipeline {
         stage('Build Web Image') {
             steps {
                 sh 'docker rm -f web_html || true'
-                sh 'docker build -t web_html:latest ./web'
+                sh 'docker build -t web_html:latest -f Dockerfile .'
                 sh 'docker run -d --name web_html -p 8081:80 web_html:latest'
             }
         }
