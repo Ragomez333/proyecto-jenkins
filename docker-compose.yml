@@ -3,7 +3,7 @@ services:
   jenkins:
     build:
       context: .
-      dockerfile: Dockerfile   # usamos la imagen personalizada con docker cli
+      dockerfile: Dockerfile.JK   # usamos la imagen personalizada con docker cli
     container_name: jenkins
     user: root
     ports:
@@ -28,7 +28,7 @@ services:
       - docker-data:/var/lib/docker
 
   web_html:
-    image: nginx:latest
+    image: Dockerfile
     container_name: web_html
     volumes:
       - ./html:/usr/share/nginx/html:ro

@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HOST = "tcp://docker:2375"
+        DOCKER_HOST = "tcp://dind:2375"
     }
 
     stages {
@@ -12,22 +12,16 @@ pipeline {
             }
         }
 
-        stage('Build & Run Web') {
+        stage('Build Web Image') {
             steps {
-                // Detener contenedor anterior si existe
                 sh 'docker rm -f web_html || true'
-
-                // Construir imagen desde el repo
-                sh 'docker build -t web_html:latest .'
-
-                // Levantar contenedor en el puerto 8081
+                sh 'docker build -t web_html:latest ./web'
                 sh 'docker run -d --name web_html -p 8081:80 web_html:latest'
             }
         }
 
         stage('Verificar despliegue') {
             steps {
-                // Verificar respuesta HTTP del index
                 sh 'curl -I http://localhost:8081 || true'
             }
         }
